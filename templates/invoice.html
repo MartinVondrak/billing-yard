@@ -1,0 +1,209 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Faktura číslo: {{ invoice.invoice_number }}</title>
+
+    <style>
+        .invoice-box {
+            max-width: 800px;
+            margin: auto;
+            padding: 30px;
+            border: 1px solid #eee;
+            box-shadow: 0 0 10px rgba(0, 0, 0, .15);
+            font-size: 16px;
+            line-height: 24px;
+            font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
+            color: #555;
+        }
+
+        .invoice-box table {
+            width: 100%;
+            line-height: inherit;
+            text-align: left;
+        }
+
+        .invoice-box table.header,
+        .invoice-box table.subjects,
+        .invoice-box table.payment {
+            margin-bottom: 40px;
+        }
+
+        .invoice-box table th,
+        .invoice-box table td {
+            padding: 5px;
+            vertical-align: top;
+        }
+
+        .invoice-box table tr th {
+            background: #eee;
+            border-bottom: 1px solid #ddd;
+            font-weight: bold;
+            text-align: left;
+        }
+
+        .invoice-box table.header tr td {
+            font-size: 45px;
+            line-height: 45px;
+            color: #333;
+        }
+
+        .invoice-box table.header tr td,
+        .invoice-box table.payment tr td,
+        .invoice-box table.subjects tr th {
+            width: 50%;
+        }
+
+        .invoice-box table.payment td table td {
+            padding: 0;
+        }
+
+        .invoice-box table.lines tr th {
+            text-align: center;
+        }
+
+        .invoice-box table.lines tr th:first-child {
+            text-align: left;
+            width: 50%;
+        }
+
+        .invoice-box table.lines tr th:last-child {
+            text-align: right;
+        }
+
+        .invoice-box table.lines tr.item td {
+            border-bottom: 1px solid #eee;
+        }
+
+        .invoice-box table.lines tr.item.last td {
+            border-bottom: none;
+        }
+
+        .invoice-box table.lines tr.total td {
+            border-top: 2px solid #eee;
+            font-weight: bold;
+        }
+
+        .invoice-box table.lines tr td:nth-child(2),
+        .invoice-box table.lines tr td:nth-child(4),
+        .invoice-box table.lines tr td:nth-child(5) {
+            text-align: right;
+        }
+
+        .invoice-box p.footer {
+            text-align: center;
+            font-size: 10px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="invoice-box">
+    <table class="header">
+        <tr class="top">
+            <td class="title">
+                <img src="https://www.sparksuite.com/images/logo.png" style="width:100%; max-width:300px;">
+            </td>
+            <td class="title">Faktura číslo: {{ invoice.invoice_number }}</td>
+        </tr>
+    </table>
+
+    <table class="subjects">
+        <tr>
+            <th>Dodavatel</th>
+            <th>Odběratel</th>
+        </tr>
+        <tr>
+            <td>
+                {{ invoice.sender.company }}<br>
+                {{ invoice.sender.street }}<br>
+                {{ invoice.sender.zip_code }}, {{ invoice.sender.city }}<br>
+                {{ invoice.sender.country }}<br>
+                IČ: {{ invoice.sender.company_id }}<br>
+                {% if invoice.sender.is_vat_payer %}
+                    DIČ: {{ invoice.sender.vat_id }}
+                {% else %}
+                    neplátce DPH
+                {% endif %}
+            </td>
+            <td>
+                {{ invoice.receiver.company }}<br>
+                {{ invoice.receiver.street }}<br>
+                {{ invoice.receiver.zip_code }}, {{ invoice.receiver.city }}<br>
+                {{ invoice.receiver.country }}<br>
+                IČ: {{ invoice.receiver.company_id }}<br>
+                {% if invoice.receiver.vat_id is not none %}
+                    DIČ: {{ invoice.receiver.vat_id }}
+                {% endif %}
+            </td>
+        </tr>
+    </table>
+
+    <table class="payment">
+        <tr>
+            <th colspan="2">Platební podmínky</th>
+        </tr>
+        <tr>
+            <td>
+                <table>
+                    <tr>
+                        <td>Banka:</td>
+                        <td>{{ invoice.bank }}</td>
+                    </tr>
+                    <tr>
+                        <td>Bankovní účet:</td>
+                        <td>{{ invoice.bank_account }}</td>
+                    </tr>
+                    <tr>
+                        <td>Variabilní symbol:</td>
+                        <td>{{ invoice.invoice_number }}</td>
+                    </tr>
+                    <tr>
+                        <td>Způsob platby:</td>
+                        <td>{{ invoice.payment_method }}</td>
+                    </tr>
+                </table>
+            </td>
+            <td>
+                <table>
+                    <tr>
+                        <td>Datum vystavení:</td>
+                        <td>{{ invoice.issue_date.strftime("%d. %m. %Y") }}</td>
+                    </tr>
+                    <tr>
+                        <td>Datum splatnosti:</td>
+                        <td>{{ invoice.due_date.strftime("%d. %m. %Y") }}</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+
+    <table class="lines">
+        <tr>
+            <th>Položka</th>
+            <th>Počet</th>
+            <th>MJ</th>
+            <th>Cena za MJ</th>
+            <th>Cena</th>
+        </tr>
+
+        {% for invoice_line in invoice.invoice_lines %}
+            <tr class="item{{ " last" if loop.last }}">
+                <td>{{ invoice_line.description }}</td>
+                <td>{{ invoice_line.quantity }}</td>
+                <td>{{ invoice_line.unit }}</td>
+                <td>{{ "%.2f"|format(invoice_line.unit_price) }} {{ invoice.currency }}</td>
+                <td>{{ "%.2f"|format(invoice_line.price) }} {{ invoice.currency }}</td>
+            </tr>
+        {% endfor %}
+
+        <tr class="total">
+            <td colspan="4">Celková cena:</td>
+            <td>{{ "%.2f"|format(total_price) }} {{ invoice.currency }}</td>
+        </tr>
+    </table>
+    <p class="footer">{{ invoice.register_info }}</p>
+</div>
+</body>
+</html>
