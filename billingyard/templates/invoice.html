@@ -1,18 +1,18 @@
 <!doctype html>
-<html>
+<html lang="cs">
 <head>
     <meta charset="utf-8">
     <title>Faktura číslo: {{ invoice.invoice_number }}</title>
 
     <style>
+        @page {
+            size: A4 portrait;
+            margin: 1cm;
+        }
+
         .invoice-box {
-            max-width: 800px;
-            margin: auto;
-            padding: 30px;
-            border: 1px solid #eee;
-            box-shadow: 0 0 10px rgba(0, 0, 0, .15);
-            font-size: 16px;
-            line-height: 24px;
+            font-size: 12pt;
+            line-height: 150%;
             font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
             color: #555;
         }
@@ -26,25 +26,25 @@
         .invoice-box table.header,
         .invoice-box table.subjects,
         .invoice-box table.payment {
-            margin-bottom: 40px;
+            margin-bottom: 1cm;
         }
 
         .invoice-box table th,
         .invoice-box table td {
-            padding: 5px;
+            padding: 1mm;
             vertical-align: top;
         }
 
         .invoice-box table tr th {
             background: #eee;
-            border-bottom: 1px solid #ddd;
+            border-bottom: 0.2mm solid #ddd;
             font-weight: bold;
             text-align: left;
         }
 
         .invoice-box table.header tr td {
-            font-size: 45px;
-            line-height: 45px;
+            font-size: 16pt;
+            line-height: 16pt;
             color: #333;
         }
 
@@ -72,7 +72,7 @@
         }
 
         .invoice-box table.lines tr.item td {
-            border-bottom: 1px solid #eee;
+            border-bottom: 0.2mm solid #eee;
         }
 
         .invoice-box table.lines tr.item.last td {
@@ -80,7 +80,7 @@
         }
 
         .invoice-box table.lines tr.total td {
-            border-top: 2px solid #eee;
+            border-top: 0.5mm solid #eee;
             font-weight: bold;
         }
 
@@ -92,7 +92,7 @@
 
         .invoice-box p.footer {
             text-align: center;
-            font-size: 10px;
+            font-size: 8pt;
         }
     </style>
 </head>

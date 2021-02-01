@@ -1,6 +1,7 @@
 from typing import IO
 
 from jinja2 import Template
+from weasyprint import HTML
 
 from .models import Invoice, Subject
 from .parser import Parser
@@ -27,5 +28,5 @@ class BillingYard:
         return invoice
 
     def print_invoice(self, invoice: Invoice):
-        with open(f'{invoice.invoice_number}.html', 'w') as file:
-            file.write(self.template.render(invoice=invoice, total_price=invoice.get_total_price()))
+        html: str = self.template.render(invoice=invoice, total_price=invoice.get_total_price())
+        HTML(string=html).write_pdf(f'{invoice.invoice_number}.pdf')

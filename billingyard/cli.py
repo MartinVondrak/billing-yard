@@ -1,12 +1,14 @@
+import os
+
 import click
 
 from .billingyard import BillingYard
 from .models import Invoice
 
 
-@click.group()
+@click.group('billingyard')
 @click.option('-s', '--sender', type=str, default='sender.json')
-@click.option('-t', '--template', type=str, default='templates/invoice.html')
+@click.option('-t', '--template', type=str, default=f'{os.path.dirname(__file__)}/templates/invoice.html')
 @click.pass_context
 def cli(ctx, sender: str, template: str):
     ctx.obj = BillingYard(sender, template)
