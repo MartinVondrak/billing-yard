@@ -4,14 +4,13 @@ from typing import Optional
 
 class Subject:
     def __init__(self, company: str, street: str, city: str, zip_code: str, country: str, company_id: str,
-                 is_vat_payer=False, vat_id: Optional[str] = None):
+                 vat_id: Optional[str] = None):
         self.company = company
         self.street = street
         self.city = city
         self.zip_code = zip_code
         self.country = country
         self.company_id = company_id
-        self.is_vat_payer = is_vat_payer
         self.vat_id = vat_id
 
 
@@ -22,6 +21,14 @@ class InvoiceLine:
         self.unit = unit
         self.unit_price = unit_price
         self.price = quantity * unit_price
+
+
+class InvoiceLineVat(InvoiceLine):
+    def __init__(self, description: str, quantity: float, unit: str, unit_price: float, vat_rate: float):
+        super().__init__(description, quantity, unit, unit_price)
+        self.vat_rate = vat_rate
+        self.vat = self.price * vat_rate
+        self.price_vat = self.price + self.vat
 
 
 class Invoice:
@@ -67,3 +74,40 @@ class Invoice:
         for invoice_line in self.invoice_lines:
             total_price += invoice_line.price
         return total_price
+
+
+class InvoiceVat(Invoice):
+    def __init__(self, invoice_number: int, issue_date: datetime, due_date: datetime, currency: str, bank: str,
+                 bank_account: str, payment_method: str, register_info: str, supply_date: datetime):
+        super().__init__(invoice_number, issue_date, due_date, currency, bank, bank_account, payment_method,
+                         register_info)
+        self.supply_date = supply_date
+        self._invoice_lines: list[InvoiceLineVat] = list()
+
+    @property
+    def invoice_lines(self) -> list[InvoiceLineVat]:
+        return self._invoice_lines
+
+    def add_invoice_line(self, invoice_line: InvoiceLineVat):
+        self._invoice_lines.append(invoice_line)
+
+    def get_total_price(self) -> float:
+        total_price: float = 0
+        for invoice_line in self.invoice_lines:
+            total_price += invoice_line.price_vat
+        return total_price
+
+    def get_vat_summary(self):
+        vat_summary = {}
+        for invoice_line in self.invoice_lines:
+            vat_rate_key: str = str(invoice_line.vat_rate)
+            if vat_rate_key not in vat_summary:
+                vat_summary[vat_rate_key] = {}
+                vat_summary[vat_rate_key]['vat_rate'] = invoice_line.vat_rate
+                vat_summary[vat_rate_key]['price'] = 0
+                vat_summary[vat_rate_key]['vat'] = 0
+                vat_summary[vat_rate_key]['price_vat'] = 0
+            vat_summary[vat_rate_key]['price'] += invoice_line.price
+            vat_summary[vat_rate_key]['vat'] += invoice_line.vat
+            vat_summary[vat_rate_key]['price_vat'] += invoice_line.price_vat
+        return vat_summary

@@ -66,7 +66,7 @@
 
         .invoice-box table.lines tr th:first-child {
             text-align: left;
-            width: 50%;
+            width: 25%;
         }
 
         .invoice-box table.lines tr th:last-child {
@@ -88,7 +88,10 @@
 
         .invoice-box table.lines tr td:nth-child(2),
         .invoice-box table.lines tr td:nth-child(4),
-        .invoice-box table.lines tr td:nth-child(5) {
+        .invoice-box table.lines tr td:nth-child(5),
+        .invoice-box table.lines tr td:nth-child(6),
+        .invoice-box table.lines tr td:nth-child(7),
+        .invoice-box table.lines tr td:nth-child(8) {
             text-align: right;
         }
 
@@ -131,8 +134,6 @@
                 IČ: {{ invoice.sender.company_id }}<br>
                 {% if invoice.sender.vat_id is not none %}
                     DIČ: {{ invoice.sender.vat_id }}
-                {% else %}
-                    neplátce DPH
                 {% endif %}
             </td>
             <td>
@@ -180,6 +181,10 @@
                         <td>{{ invoice.issue_date.strftime("%d. %m. %Y") }}</td>
                     </tr>
                     <tr>
+                        <td>Datum uskutečnění zdanitelného plnění:</td>
+                        <td>{{ invoice.supply_date.strftime("%d. %m. %Y") }}</td>
+                    </tr>
+                    <tr>
                         <td>Datum splatnosti:</td>
                         <td>{{ invoice.due_date.strftime("%d. %m. %Y") }}</td>
                     </tr>
@@ -193,8 +198,11 @@
             <th>Položka</th>
             <th>Počet</th>
             <th>MJ</th>
+            <th>Sazba DPH</th>
             <th>Cena za MJ</th>
             <th>Cena</th>
+            <th>DPH</th>
+            <th>Cena s DPH</th>
         </tr>
 
         {% for invoice_line in invoice.invoice_lines %}
@@ -202,14 +210,34 @@
                 <td>{{ invoice_line.description }}</td>
                 <td>{{ invoice_line.quantity }}</td>
                 <td>{{ invoice_line.unit }}</td>
+                <td>{{ "%d"|format(invoice_line.vat_rate * 100) }} %</td>
                 <td>{{ invoice_line.unit_price|price }} {{ invoice.currency }}</td>
                 <td>{{ invoice_line.price|price }} {{ invoice.currency }}</td>
+                <td>{{ invoice_line.vat|price }} {{ invoice.currency }}</td>
+                <td>{{ invoice_line.price_vat|price }} {{ invoice.currency }}</td>
             </tr>
         {% endfor %}
 
-        <tr class="total">
-            <td colspan="4">Celková cena:</td>
-            <td>{{ total_price|price }} {{ invoice.currency }}</td>
+        <tr>
+            <td colspan="3"></td>
+            <td colspan="5">
+                <table>
+                    <tr>
+                        <th>Sazba</th>
+                        <th>Základ</th>
+                        <th>DPH</th>
+                        <th>Včetně DPH</th>
+                    </tr>
+                    {% for rate in vat_summary %}
+                        <tr>
+                            <td>{{ "%d"|format(vat_summary[rate]['vat_rate'] * 100) }} %</td>
+                            <td>{{ vat_summary[rate]['price']|price }} {{ invoice.currency }}</td>
+                            <td>{{ vat_summary[rate]['vat']|price }} {{ invoice.currency }}</td>
+                            <td>{{ vat_summary[rate]['price_vat']|price }} {{ invoice.currency }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </td>
         </tr>
     </table>
     <p class="footer">{{ invoice.register_info }}</p>
