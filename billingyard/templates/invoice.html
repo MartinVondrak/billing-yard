@@ -42,16 +42,18 @@
             text-align: left;
         }
 
-        .invoice-box table.header tr td {
-            font-size: 16pt;
-            line-height: 16pt;
-            color: #333;
-        }
-
         .invoice-box table.header tr td,
         .invoice-box table.payment tr td,
         .invoice-box table.subjects tr th {
             width: 50%;
+        }
+
+        .invoice-box table.header td.title {
+            padding: 0;
+        }
+
+        .invoice-box table.header td.title table td:nth-child(2) {
+            text-align: right;
         }
 
         .invoice-box table.payment td table td {
@@ -102,9 +104,16 @@
     <table class="header">
         <tr class="top">
             <td class="title">
-                <img src="https://www.sparksuite.com/images/logo.png" style="width:100%; max-width:300px;">
+                <!-- place for logo -->
             </td>
-            <td class="title">Faktura číslo: {{ invoice.invoice_number }}</td>
+            <td class="title">
+                <table>
+                    <tr>
+                        <th>Faktura číslo</th>
+                        <td>{{ invoice.invoice_number }}</td>
+                    </tr>
+                </table>
+            </td>
         </tr>
     </table>
 
@@ -193,14 +202,14 @@
                 <td>{{ invoice_line.description }}</td>
                 <td>{{ invoice_line.quantity }}</td>
                 <td>{{ invoice_line.unit }}</td>
-                <td>{{ "%.2f"|format(invoice_line.unit_price) }} {{ invoice.currency }}</td>
-                <td>{{ "%.2f"|format(invoice_line.price) }} {{ invoice.currency }}</td>
+                <td>{{ invoice_line.unit_price|price }} {{ invoice.currency }}</td>
+                <td>{{ invoice_line.price|price }} {{ invoice.currency }}</td>
             </tr>
         {% endfor %}
 
         <tr class="total">
             <td colspan="4">Celková cena:</td>
-            <td>{{ "%.2f"|format(total_price) }} {{ invoice.currency }}</td>
+            <td>{{ total_price|price }} {{ invoice.currency }}</td>
         </tr>
     </table>
     <p class="footer">{{ invoice.register_info }}</p>

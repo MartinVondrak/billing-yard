@@ -1,3 +1,8 @@
 from .cli import cli
 
-cli(obj={})
+
+def main():
+    cli(obj={})
+
+
+main()

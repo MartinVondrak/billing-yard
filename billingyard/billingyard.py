@@ -1,10 +1,14 @@
 from typing import IO
 
-from jinja2 import Template
+from jinja2 import Template, Environment
 from weasyprint import HTML
 
 from .models import Invoice, Subject
 from .parser import Parser
+
+
+def format_price(value: float) -> str:
+    return '{:,.2f}'.format(value).replace(',', ' ').replace('.', ',')
 
 
 class BillingYardError(Exception):
@@ -14,9 +18,11 @@ class BillingYardError(Exception):
 class BillingYard:
     def __init__(self, sender_path: str, template_path: str):
         self.sender: Subject = Parser.parse_subject_from_file(sender_path)
+        environment: Environment = Environment()
+        environment.filters['price'] = format_price
         try:
             template_file: IO = open(template_path)
-            self.template: Template = Template(template_file.read())
+            self.template: Template = environment.from_string(template_file.read())
         except OSError as error:
             raise BillingYardError(error)
 
