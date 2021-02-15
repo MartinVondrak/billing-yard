@@ -25,7 +25,8 @@
 
         .invoice-box table.header,
         .invoice-box table.subjects,
-        .invoice-box table.payment {
+        .invoice-box table.payment,
+        .invoice-box table.lines {
             margin-bottom: 0.7cm;
         }
 
@@ -92,6 +93,41 @@
         .invoice-box table.lines tr td:nth-child(6),
         .invoice-box table.lines tr td:nth-child(7),
         .invoice-box table.lines tr td:nth-child(8) {
+            text-align: right;
+        }
+
+        .invoice-box table.summary-wrapper tr td:first-child {
+        }
+
+        .invoice-box table.summary tr th {
+            text-align: center;
+        }
+
+        .invoice-box table.summary tr th:first-child {
+            text-align: left;
+        }
+
+        .invoice-box table.summary tr th:last-child {
+            text-align: right;
+
+        }
+
+        .invoice-box table.summary tr td {
+            border-bottom: 0.2mm solid #eee;
+        }
+
+        .invoice-box table.summary tr.last td {
+            border-bottom: none;
+        }
+
+        .invoice-box table.summary tr.total td {
+            border-top: 0.5mm solid #eee;
+            font-weight: bold;
+        }
+
+        .invoice-box table.summary tr td:nth-child(2),
+        .invoice-box table.summary tr td:nth-child(3),
+        .invoice-box table.summary tr td:nth-child(4) {
             text-align: right;
         }
 
@@ -217,11 +253,13 @@
                 <td>{{ invoice_line.price_vat|price }} {{ invoice.currency }}</td>
             </tr>
         {% endfor %}
+    </table>
 
+    <table class="summary-wrapper">
         <tr>
             <td colspan="3"></td>
-            <td colspan="5">
-                <table>
+            <td>
+                <table class="summary">
                     <tr>
                         <th>Sazba</th>
                         <th>Základ</th>
@@ -229,13 +267,17 @@
                         <th>Včetně DPH</th>
                     </tr>
                     {% for rate in vat_summary %}
-                        <tr>
-                            <td>{{ "%d"|format(vat_summary[rate]['vat_rate'] * 100) }} %</td>
-                            <td>{{ vat_summary[rate]['price']|price }} {{ invoice.currency }}</td>
-                            <td>{{ vat_summary[rate]['vat']|price }} {{ invoice.currency }}</td>
-                            <td>{{ vat_summary[rate]['price_vat']|price }} {{ invoice.currency }}</td>
+                        <tr{{ " class=\"last\"" if loop.last }}>
+                            <td>{{ "%d"|format(vat_summary[rate].vat_rate * 100) }} %</td>
+                            <td>{{ vat_summary[rate].price|price }} {{ invoice.currency }}</td>
+                            <td>{{ vat_summary[rate].vat|price }} {{ invoice.currency }}</td>
+                            <td>{{ vat_summary[rate].price_vat|price }} {{ invoice.currency }}</td>
                         </tr>
                     {% endfor %}
+                    <tr class="total last">
+                        <td colspan="3">Celková cena:</td>
+                        <td>{{ total_price|price }} {{ invoice.currency }}</td>
+                    </tr>
                 </table>
             </td>
         </tr>

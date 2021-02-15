@@ -103,11 +103,16 @@ class InvoiceVat(Invoice):
             vat_rate_key: str = str(invoice_line.vat_rate)
             if vat_rate_key not in vat_summary:
                 vat_summary[vat_rate_key] = {}
-                vat_summary[vat_rate_key]['vat_rate'] = invoice_line.vat_rate
-                vat_summary[vat_rate_key]['price'] = 0
-                vat_summary[vat_rate_key]['vat'] = 0
-                vat_summary[vat_rate_key]['price_vat'] = 0
-            vat_summary[vat_rate_key]['price'] += invoice_line.price
-            vat_summary[vat_rate_key]['vat'] += invoice_line.vat
-            vat_summary[vat_rate_key]['price_vat'] += invoice_line.price_vat
+                vat_summary[vat_rate_key] = VatSummaryLine(invoice_line.vat_rate)
+            vat_summary[vat_rate_key].price += invoice_line.price
+            vat_summary[vat_rate_key].vat += invoice_line.vat
+            vat_summary[vat_rate_key].price_vat += invoice_line.price_vat
         return vat_summary
+
+
+class VatSummaryLine:
+    def __init__(self, vat_rate: float):
+        self.vat_rate: float = vat_rate
+        self.price: float = 0
+        self.vat: float = 0
+        self.price_vat: float = 0
