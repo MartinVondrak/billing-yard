@@ -9,7 +9,8 @@ If you like this software, please [buy me a coffee](https://www.buymeacoffee.com
 
 First, please note that the software has [WeasyPrint](https://weasyprint.org)
 as a dependency and WeasyPrint needs some external third party libraries for correct functioning. The way to install
-these libraries will differ based on your operating system.
+these libraries will differ based on your operating system. So first you need to install these dependencies according to
+the manual below, then you can install Billing Yard itself.
 
 The installation manual below expects you to know and understand how to work with [pip](https://pip.pypa.io)
 and [Virtual Environment](https://docs.python.org/3/tutorial/venv.html).
@@ -65,11 +66,21 @@ brew install python3 cairo pango gdk-pixbuf libffi
 For installation on Windows or further support, please see the
 official [WeasyPrint installation guide](https://weasyprint.readthedocs.io/en/latest/install.html).
 
+### Installing Billing Yard
+
+First you need to decide whether you want to use Virtual Environment or install Billing Yard globally. But note that
+installing in Virtual Environment is always preferred way. Then just make sure you are using Python 3.9 or newer and run
+following command, and you are done.
+
+```shell
+pip install billingyard
+```
+
 ## Basic usage
 
 First step is to create configuration and data source files for generating an invoice. All configuration and data
 sources for an invoice are stored in JSON files. There are three schemas of JSON files, one for business entity (sender,
-receiver), one for an invoice without VAT and one for an invoice with VAT.
+receiver), one for an invoice without VAT and one for an invoice with VAT. Then you can generate the invoice itself.
 
 ### Business entity
 
@@ -203,6 +214,12 @@ Each invoice line consists of following properties.
 
 All dates have `DD. MM. YYYY` format.
 
+### Generating an invoice
+
 ```shell
-billingyard issue-invoice
+billingyard issue-invoice -i invoice.json -r receiver.json
+```
+
+```shell
+billingyard issue-invoice -i invoice_vat.json -r receiver.json --vat
 ```
