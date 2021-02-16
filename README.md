@@ -85,8 +85,123 @@ We create two business entities, sender (entity which issues the invoice) and re
   "company_id": "00011000",
   "vat_id": "CZ00011000"
 }
-
 ```
+
+* **company** - the business name of the business entity
+* **street** - the street in the address of the business entity
+* **city** - the city in the address of the business entity
+* **zip_code** - the zip code in the address of the business entity
+* **country** - the country in the address of the business entity
+* **company** - the identifier given by Czech authority of the business entity
+* **street** - the identifier for VAT purpose of the business entity
+    * optional if business entity is not VAT payer
+
+### Invoice for a non VAT payer
+
+Below you can find the self explaining example of a non VAT payer invoice with further description.
+
+```json
+{
+  "invoice_number": "2021001",
+  "issue_date": "01. 01. 2021",
+  "due_date": "31. 01. 2021",
+  "currency": "Kč",
+  "bank": "Bank a.s.",
+  "bank_account": "1234567890/1234",
+  "payment_method": "bank transfer",
+  "register_info": "Fyzická osoba zapsaná v živnostenském rejstříku.",
+  "invoice_lines": [
+    {
+      "description": "software development",
+      "unit": "hr",
+      "quantity": 20,
+      "unit_price": 1500
+    }
+  ]
+}
+```
+
+* **invoice_number** - a unique identifier of the invoice
+    * completely up to you, but keep in mind local policies from governmane
+* **issue_date** - the date of issue of the invoice
+    * optional, if not set current date is used
+* **due_date** - the last day, when the invoice must be paid
+* **currency** - the currency in which is the invoice issued
+* **bank** - the bank of the sender business entity
+* **bank_account** - the bank account number of the sender business entity
+* **payment_method** - the agreed instrument to pay the invoice
+    * e.g. bank transfer, cash, credit card
+    * this text is directly rendered in the invoice
+* **register_info** - the info about record in government registers of the sender business entity
+    * the typical examples in Czech are "Fyzická osoba zapsaná v živnostenském rejstříku." or "Společnost je zapsána v
+      obchodním rejstříku vedeném u Městského soudu v Praze, oddílu C, vložce 2396."
+* **invoice_lines** - the list of items that are invoiced
+
+Each invoice line consists of following properties.
+
+* **description** - the name or more exhaustive description of the invoiced item
+* **unit** - the unit which we can use to count the invoiced item
+    * e.g. hour, piece, meter, square meter etc
+* **quantity** - the amount of invoiced items in previously specified unit
+* **unit_price** - the price of the invoiced item for one unit
+
+All dates have `DD. MM. YYYY` format.
+
+### Invoice for a VAT payer
+
+Below you can find the self explaining example of a VAT payer invoice with further description.
+
+```json
+{
+  "invoice_number": "2021001",
+  "issue_date": "01. 01. 2021",
+  "supply_date": "01. 01. 2021",
+  "due_date": "31. 01. 2021",
+  "currency": "Kč",
+  "bank": "Bank a.s.",
+  "bank_account": "1234567890/1234",
+  "payment_method": "bank transfer",
+  "register_info": "Fyzická osoba zapsaná v živnostenském rejstříku.",
+  "invoice_lines": [
+    {
+      "description": "software development",
+      "unit": "hr",
+      "quantity": 20,
+      "unit_price": 1500,
+      "vat_rate": 0.21
+    }
+  ]
+}
+```
+
+* **invoice_number** - a unique identifier of the invoice
+    * completely up to you, but keep in mind local policies from governmane
+* **issue_date** - the date of issue of the invoice
+    * optional, if not set current date is used
+* **supply_date** - the date of taxable supply
+    * optional, if not set current date is used
+* **due_date** - the last day, when the invoice must be paid
+* **currency** - the currency in which is the invoice issued
+* **bank** - the bank of the sender business entity
+* **bank_account** - the bank account number of the sender business entity
+* **payment_method** - the agreed instrument to pay the invoice
+    * e.g. bank transfer, cash, credit card
+    * this text is directly rendered in the invoice
+* **register_info** - the info about record in government registers of the sender business entity
+    * the typical examples in Czech are "Fyzická osoba zapsaná v živnostenském rejstříku." or "Společnost je zapsána v
+      obchodním rejstříku vedeném u Městského soudu v Praze, oddílu C, vložce 2396."
+* **invoice_lines** - the list of items that are invoiced
+
+Each invoice line consists of following properties.
+
+* **description** - the name or more exhaustive description of the invoiced item
+* **unit** - the unit which we can use to count the invoiced item
+    * e.g. hour, piece, meter, square meter etc
+* **quantity** - the amount of invoiced items in previously specified unit
+* **unit_price** - the price of the invoiced item for one unit without VAT
+* **vat_rate** - the rate of VAT for this invoiced item
+
+All dates have `DD. MM. YYYY` format.
 
 ```shell
 billingyard issue-invoice
