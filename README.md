@@ -105,7 +105,7 @@ We create two business entities, sender (entity which issues the invoice) and re
 * **country** - the country in the address of the business entity
 * **company** - the identifier given by Czech authority of the business entity
 * **street** - the identifier for VAT purpose of the business entity
-    * optional if business entity is not VAT payer
+    * optional if business entity is not a VAT payer
 
 ### Invoice for a non VAT payer
 
@@ -216,10 +216,24 @@ All dates have `DD. MM. YYYY` format.
 
 ### Generating an invoice
 
-```shell
-billingyard issue-invoice -i invoice.json -r receiver.json
-```
+If you installed Billing Yard using Virtual Environment, just activate this environment and run one of the following
+commands, depending on whether you are a VAT payer or not. If you installed Billing Yard globally, just run one of the
+commands.
 
 ```shell
-billingyard issue-invoice -i invoice_vat.json -r receiver.json --vat
+billingyard -s sender.json issue-invoice -i invoice.json -r receiver.json
 ```
+
+The option `-s` expects path to JSON data file with information about a sender business entity. It can be omitted, if
+its name is `sender.json` and it is located in the same directory from which is the command executed.
+
+The option `-i` expects path to JSON data file with the invoice data.
+
+The option `-r` expects path to JSON data file with information about a sender business entity.
+
+```shell
+billingyard -s sender.json issue-invoice -i invoice_vat.json -r receiver.json --vat
+```
+
+The option `--vat` is used to generate an invoice for a VAT payer sender business entity. Please do not forget, that in
+this case, you have to also provide correct invoice JSON data file with all needed attributes.
