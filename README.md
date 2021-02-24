@@ -237,3 +237,11 @@ billingyard -s sender.json issue-invoice -i invoice_vat.json -r receiver.json --
 
 The option `--vat` is used to generate an invoice for a VAT payer sender business entity. Please do not forget, that in
 this case, you have to also provide correct invoice JSON data file with all needed attributes.
+
+## License
+
+This software is released under MIT License and use other third party software.
+
+* [Click](https://github.com/pallets/click/blob/master/LICENSE.rst)
+* [Jinja2](https://github.com/pallets/jinja/blob/master/LICENSE.rst)
+* [WeasyPrint](https://github.com/Kozea/WeasyPrint/blob/master/LICENSE)
