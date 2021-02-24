@@ -5,7 +5,7 @@ with open('README.md', 'r', encoding='utf-8') as f:
 
 setup(
     name='billingyard',
-    version='1.0.0-beta1',
+    version='1.0.0',
     author='Martin Vondrák',
     author_email='martinvondrak@icloud.com',
     description='CLI invoice generator for business entities in the Czech republic',
