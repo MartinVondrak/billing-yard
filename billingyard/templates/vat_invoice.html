@@ -2,7 +2,7 @@
 <html lang="cs">
 <head>
     <meta charset="utf-8">
-    <title>Faktura číslo: {{ invoice.invoice_number }}</title>
+    <title>Faktura - daňový doklad číslo: {{ invoice.invoice_number }}</title>
 
     <style>
         @page {
@@ -54,6 +54,7 @@
         }
 
         .invoice-box table.header td.title table td:nth-child(2) {
+            width: 33%;
             text-align: right;
         }
 
@@ -148,7 +149,7 @@
             <td class="title">
                 <table>
                     <tr>
-                        <th>Faktura číslo</th>
+                        <th>Faktura - daňový doklad číslo</th>
                         <td>{{ invoice.invoice_number }}</td>
                     </tr>
                 </table>
