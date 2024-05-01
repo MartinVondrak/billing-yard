@@ -5,9 +5,9 @@ with open('README.md', 'r', encoding='utf-8') as f:
 
 setup(
     name='billingyard',
-    version='1.0.1',
+    version='1.1.0',
     author='Martin Vondrák',
-    author_email='martinvondrak@icloud.com',
+    author_email='martin@martinvondrak.cz',
     description='CLI invoice generator for business entities in the Czech republic',
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -20,13 +20,15 @@ setup(
         'Natural Language :: Czech',
         'Programming Language :: Python :: 3',
         'Topic :: Office/Business :: Financial :: Accounting',
+        'Development Status :: 5 - Production/Stable',
     ],
     packages=find_packages(),
     package_data={'billingyard': ['templates/*.html']},
+    python_requires='>=3.9',
     install_requires=[
-        'Click>=7.1.2,<8',
-        'Jinja2>=2.11.3,<3',
-        'WeasyPrint>=52.2,<53'
+        'Click>=8.1.7,<9',
+        'Jinja2>=3.1.3,<4',
+        'WeasyPrint>=62.0,<63'
     ],
     entry_points={
         'console_scripts': [

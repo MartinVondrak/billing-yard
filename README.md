@@ -1,16 +1,16 @@
 # Billing Yard
 
-Billing Yard is an open source CLI tool written in Python 3.9 for generating invoices from [JSON](https://www.json.org)
+Billing Yard is an open source CLI tool written in Python 3 for generating invoices from [JSON](https://www.json.org)
 for business entities in the Czech republic. It supports invoices for both VAT payers and non VAT payers.
 
 If you like this software, please [buy me a coffee](https://www.buymeacoffee.com/martinvondrak).
 
 ## Installation
 
-First, please note that the software has [WeasyPrint](https://weasyprint.org)
-as a dependency and WeasyPrint needs some external third party libraries for correct functioning. The way to install
-these libraries will differ based on your operating system. So first you need to install these dependencies according to
-the manual below, then you can install Billing Yard itself.
+First, please note that the software has [WeasyPrint](https://weasyprint.org) as a dependency and WeasyPrint needs some
+external third party libraries for correct functioning. The way to install these libraries will differ based on your
+operating system. So first you need to install these dependencies according to the manual below, then you can install
+Billing Yard itself.
 
 The installation manual below expects you to know and understand how to work with [pip](https://pip.pypa.io)
 and [Virtual Environment](https://docs.python.org/3/tutorial/venv.html).
@@ -19,38 +19,42 @@ and [Virtual Environment](https://docs.python.org/3/tutorial/venv.html).
 
 Below, you can find how to install external third party libraries on different Linux distributions.
 
-#### Debian / Ubuntu
+#### Debian
 
-Debian 10 Buster or newer / Ubuntu 18.04 Bionic Beaver or newer
+Debian 11 Bullseye or newer
 
 ```shell
-sudo apt-get install build-essential python3-dev python3-pip python3-setuptools python3-wheel python3-cffi libcairo2 libpango-1.0-0 libpangocairo-1.0-0 libgdk-pixbuf2.0-0 libffi-dev shared-mime-info
+apt install python3-pip libpango-1.0-0 libpangoft2-1.0-0 libjpeg-dev libopenjp2-7-dev libffi-dev
+```
+
+#### Ubuntu
+
+Ubuntu 20.04 Focal Fossa or newer
+
+```shell
+apt install python3-pip libpango-1.0-0 libharfbuzz0b libpangoft2-1.0-0 libffi-dev libjpeg-dev libopenjp2-7-dev
 ```
 
 #### Fedora
 
+Fedora 34 or newer
+
 ```shell
-sudo yum install redhat-rpm-config python-devel python-pip python-setuptools python-wheel python-cffi libffi-devel cairo pango gdk-pixbuf2
+dnf install python3-pip pango gcc python3-devel gcc-c++ zlib-devel libjpeg-devel openjpeg2-devel libffi-devel
 ```
 
 #### Archlinux
 
 ```shell
-sudo pacman -S python-pip python-setuptools python-wheel cairo pango gdk-pixbuf2 libffi pkg-config
-```
-
-#### Gentoo
-
-```shell
-emerge pip setuptools wheel cairo pango gdk-pixbuf cffi
+pacman -S python-pip pango gcc libjpeg-turbo openjpeg2
 ```
 
 #### Alpine
 
-Alpine Linux 3.6 or newer
+Alpine Linux 3.14 or newer
 
 ```shell
-apk --update --upgrade add gcc musl-dev jpeg-dev zlib-dev libffi-dev cairo-dev pango-dev gdk-pixbuf-dev
+apk add py3-pip gcc musl-dev python3-dev pango zlib-dev jpeg-dev openjpeg-dev g++ libffi-dev
 ```
 
 ### macOS
@@ -58,19 +62,21 @@ apk --update --upgrade add gcc musl-dev jpeg-dev zlib-dev libffi-dev cairo-dev p
 Installation on macOS is recommended via [Homebrew](https://brew.sh).
 
 ```shell
-brew install python3 cairo pango gdk-pixbuf libffi
+brew install python3 pango libffi
 ```
 
 ### Windows and further support
 
 For installation on Windows or further support, please see the
-official [WeasyPrint installation guide](https://weasyprint.readthedocs.io/en/latest/install.html).
+official [WeasyPrint installation guide](https://doc.courtbouillon.org/weasyprint/stable/first_steps.html#windows). But
+please keep in mind that WeasyPrint must be installed as a dependency of Billing Yard and not directly using your OS
+package manager.
 
 ### Installing Billing Yard
 
 First you need to decide whether you want to use Virtual Environment or install Billing Yard globally. But note that
-installing in Virtual Environment is always preferred way. Then just make sure you are using Python 3.9 or newer and run
-following command, and you are done.
+installing in Virtual Environment is always preferred way. Then just make sure you are using Python 3.9 or newer and
+run following command, and you are done.
 
 ```shell
 pip install billingyard
@@ -104,7 +110,7 @@ We create two business entities, sender (entity which issues the invoice) and re
 * **zip_code** - the zip code in the address of the business entity
 * **country** - the country in the address of the business entity
 * **company** - the identifier given by Czech authority of the business entity
-* **street** - the identifier for VAT purpose of the business entity
+* **vat_id** - the identifier for VAT purpose of the business entity
     * optional if business entity is not a VAT payer
 
 ### Invoice for a non VAT payer
@@ -133,7 +139,7 @@ Below you can find the self explaining example of a non VAT payer invoice with f
 ```
 
 * **invoice_number** - a unique identifier of the invoice
-    * completely up to you, but keep in mind local policies from governmane
+    * completely up to you, but keep in mind local policies from government
 * **issue_date** - the date of issue of the invoice
     * optional, if not set current date is used
 * **due_date** - the last day, when the invoice must be paid
@@ -186,7 +192,7 @@ Below you can find the self explaining example of a VAT payer invoice with furth
 ```
 
 * **invoice_number** - a unique identifier of the invoice
-    * completely up to you, but keep in mind local policies from governmane
+    * completely up to you, but keep in mind local policies from government
 * **issue_date** - the date of issue of the invoice
     * optional, if not set current date is used
 * **supply_date** - the date of taxable supply
@@ -242,6 +248,6 @@ this case, you have to also provide correct invoice JSON data file with all need
 
 This software is released under MIT License and use other third party software.
 
-* [Click](https://github.com/pallets/click/blob/master/LICENSE.rst)
-* [Jinja2](https://github.com/pallets/jinja/blob/master/LICENSE.rst)
+* [Click](https://github.com/pallets/click/blob/main/LICENSE.txt)
+* [Jinja2](https://github.com/pallets/jinja/blob/main/LICENSE.txt)
 * [WeasyPrint](https://github.com/Kozea/WeasyPrint/blob/master/LICENSE)
