@@ -15,8 +15,25 @@ jobs:
         run: |
           python -m pip install build
           python3 -m build
-      - name: Store the packages
+      - name: Store the binary wheel and the source tarball
         uses: actions/upload-artifact@v4
         with:
           name: billing-yard
           path: dist/
+  publish-pypi:
+    name: Publish Python packages to PyPI
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    needs: build
+    permissions:
+      id-token: write
+    environment:
+      name: pypi
+    steps:
+      - name: Retrieve the packages
+        uses: actions/download-artifact@v4
+        with:
+          name: billing-yard
+          path: dist/
+      - name: Publish the packages
+        uses: pypa/gh-action-pypi-publish@release/v1
