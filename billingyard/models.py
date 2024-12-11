@@ -33,13 +33,14 @@ class InvoiceLineVat(InvoiceLine):
 
 class Invoice:
     def __init__(self, invoice_number: int, issue_date: datetime, due_date: datetime, currency: str, bank: str,
-                 bank_account: str, payment_method: str, register_info: str):
+                 bank_account: str, iban: str, payment_method: str, register_info: str):
         self.invoice_number = invoice_number
         self.issue_date = issue_date
         self.due_date = due_date
         self.currency = currency
         self.bank = bank
         self.bank_account = bank_account
+        self.iban = iban
         self.payment_method = payment_method
         self.register_info = register_info
         self._sender: Optional[Subject] = None
@@ -75,11 +76,17 @@ class Invoice:
             total_price += invoice_line.price
         return total_price
 
+    def get_currency_code(self) -> str:
+        currency_to_code = {
+            'Kč': 'CZK'
+        }
+        return currency_to_code.get(self.currency)
+
 
 class InvoiceVat(Invoice):
     def __init__(self, invoice_number: int, issue_date: datetime, due_date: datetime, currency: str, bank: str,
-                 bank_account: str, payment_method: str, register_info: str, supply_date: datetime):
-        super().__init__(invoice_number, issue_date, due_date, currency, bank, bank_account, payment_method,
+                 bank_account: str, iban: str, payment_method: str, register_info: str, supply_date: datetime):
+        super().__init__(invoice_number, issue_date, due_date, currency, bank, bank_account, iban, payment_method,
                          register_info)
         self.supply_date = supply_date
         self._invoice_lines: list[InvoiceLineVat] = list()

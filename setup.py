@@ -5,7 +5,7 @@ with open('README.md', 'r', encoding='utf-8') as f:
 
 setup(
     name='billingyard',
-    version='1.1.0',
+    version='1.2.0',
     author='Martin Vondrák',
     author_email='martin@martinvondrak.cz',
     description='CLI invoice generator for business entities in the Czech republic',
@@ -27,8 +27,9 @@ setup(
     python_requires='>=3.9',
     install_requires=[
         'Click>=8.1.7,<9',
-        'Jinja2>=3.1.3,<4',
-        'WeasyPrint>=62.0,<63'
+        'Jinja2>=3.1.4,<4',
+        'WeasyPrint>=63.1,<64',
+        'qrcode>=8.0,<9',
     ],
     entry_points={
         'console_scripts': [

@@ -32,7 +32,7 @@ class BaseInvoiceProcessor(ABC):
         pass
 
     @abstractmethod
-    def print_invoice(self, invoice: Invoice) -> None:
+    def print_invoice(self, invoice: Invoice, qr_code: str) -> None:
         pass
 
 
@@ -48,8 +48,8 @@ class InvoiceProcessor(BaseInvoiceProcessor):
         invoice.receiver = receiver
         return invoice
 
-    def print_invoice(self, invoice: Invoice) -> None:
-        html: str = self.template.render(invoice=invoice, total_price=invoice.get_total_price())
+    def print_invoice(self, invoice: Invoice, qr_code: str) -> None:
+        html: str = self.template.render(invoice=invoice, total_price=invoice.get_total_price(), qr_code=qr_code)
         HTML(string=html).write_pdf(f'{invoice.invoice_number}.pdf')
 
 
@@ -65,7 +65,7 @@ class VatInvoiceProcessor(BaseInvoiceProcessor):
         invoice.receiver = receiver
         return invoice
 
-    def print_invoice(self, invoice: InvoiceVat) -> None:
-        html: str = self.template.render(invoice=invoice, vat_summary=invoice.get_vat_summary(),
+    def print_invoice(self, invoice: InvoiceVat, qr_code: str) -> None:
+        html: str = self.template.render(invoice=invoice, vat_summary=invoice.get_vat_summary(), qr_code=qr_code,
                                          total_price=invoice.get_total_price())
         HTML(string=html).write_pdf(f'{invoice.invoice_number}.pdf')

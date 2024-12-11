@@ -1,7 +1,8 @@
 # Billing Yard
 
-Billing Yard is an open source CLI tool written in Python 3 for generating invoices from [JSON](https://www.json.org)
-for business entities in the Czech republic. It supports invoices for both VAT payers and non VAT payers.
+Billing Yard is an open source CLI tool written in Python 3 for generating invoices as PDF files
+from [JSON](https://www.json.org) for business entities in the Czech republic. It supports invoices for both VAT payers
+and non VAT payers and generates a QR code with payment information for Czech banks.
 
 If you like this software, please [buy me a coffee](https://www.buymeacoffee.com/martinvondrak).
 
@@ -24,7 +25,7 @@ Below, you can find how to install external third party libraries on different L
 Debian 11 Bullseye or newer
 
 ```shell
-apt install python3-pip libpango-1.0-0 libpangoft2-1.0-0 libjpeg-dev libopenjp2-7-dev libffi-dev
+apt install python3-pip libpango-1.0-0 libpangoft2-1.0-0 libharfbuzz-subset0
 ```
 
 #### Ubuntu
@@ -32,29 +33,29 @@ apt install python3-pip libpango-1.0-0 libpangoft2-1.0-0 libjpeg-dev libopenjp2-
 Ubuntu 20.04 Focal Fossa or newer
 
 ```shell
-apt install python3-pip libpango-1.0-0 libharfbuzz0b libpangoft2-1.0-0 libffi-dev libjpeg-dev libopenjp2-7-dev
+apt install python3-pip libpango-1.0-0 libharfbuzz0b libpangoft2-1.0-0 libharfbuzz-subset0
 ```
 
 #### Fedora
 
-Fedora 34 or newer
+Fedora 39 or newer
 
 ```shell
-dnf install python3-pip pango gcc python3-devel gcc-c++ zlib-devel libjpeg-devel openjpeg2-devel libffi-devel
+dnf install python-pip pango
 ```
 
 #### Archlinux
 
 ```shell
-pacman -S python-pip pango gcc libjpeg-turbo openjpeg2
+pacman -S python-pip pango
 ```
 
 #### Alpine
 
-Alpine Linux 3.14 or newer
+Alpine Linux 3.17 or newer
 
 ```shell
-apk add py3-pip gcc musl-dev python3-dev pango zlib-dev jpeg-dev openjpeg-dev g++ libffi-dev
+apk add py3-pip so:libgobject-2.0.so.0 so:libpango-1.0.so.0 so:libharfbuzz.so.0 so:libharfbuzz-subset.so.0 so:libfontconfig.so.1 so:libpangoft2-1.0.so.0
 ```
 
 ### macOS
@@ -125,6 +126,7 @@ Below you can find the self explaining example of a non VAT payer invoice with f
   "currency": "Kč",
   "bank": "Bank a.s.",
   "bank_account": "1234567890/1234",
+  "iban": "CZ4100000000000123456789",
   "payment_method": "bank transfer",
   "register_info": "Fyzická osoba zapsaná v živnostenském rejstříku.",
   "invoice_lines": [
@@ -146,6 +148,8 @@ Below you can find the self explaining example of a non VAT payer invoice with f
 * **currency** - the currency in which is the invoice issued
 * **bank** - the bank of the sender business entity
 * **bank_account** - the bank account number of the sender business entity
+* **iban** - the IBAN of the sender business entity
+    * optional, if not set, the QR code with payment information are not generated in the invoice
 * **payment_method** - the agreed instrument to pay the invoice
     * e.g. bank transfer, cash, credit card
     * this text is directly rendered in the invoice
@@ -177,6 +181,7 @@ Below you can find the self explaining example of a VAT payer invoice with furth
   "currency": "Kč",
   "bank": "Bank a.s.",
   "bank_account": "1234567890/1234",
+  "iban": "CZ4100000000000123456789",
   "payment_method": "bank transfer",
   "register_info": "Fyzická osoba zapsaná v živnostenském rejstříku.",
   "invoice_lines": [
@@ -201,6 +206,8 @@ Below you can find the self explaining example of a VAT payer invoice with furth
 * **currency** - the currency in which is the invoice issued
 * **bank** - the bank of the sender business entity
 * **bank_account** - the bank account number of the sender business entity
+* **iban** - the IBAN of the sender business entity
+    * optional, if not set, the QR code with payment information are not generated in the invoice
 * **payment_method** - the agreed instrument to pay the invoice
     * e.g. bank transfer, cash, credit card
     * this text is directly rendered in the invoice
@@ -251,3 +258,4 @@ This software is released under MIT License and use other third party software.
 * [Click](https://github.com/pallets/click/blob/main/LICENSE.txt)
 * [Jinja2](https://github.com/pallets/jinja/blob/main/LICENSE.txt)
 * [WeasyPrint](https://github.com/Kozea/WeasyPrint/blob/master/LICENSE)
+* [qrcode](https://github.com/lincolnloop/python-qrcode/blob/main/LICENSE)

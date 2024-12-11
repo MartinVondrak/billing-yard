@@ -43,7 +43,9 @@
         }
 
         .invoice-box table.header tr td,
-        .invoice-box table.payment tr td,
+        {% if qr_code is none %}
+            .invoice-box table.payment tr td,
+        {% endif %}
         .invoice-box table.subjects tr th {
             width: 50%;
         }
@@ -58,6 +60,10 @@
 
         .invoice-box table.payment td table td {
             padding: 0;
+        }
+
+        .invoice-box table.payment td.qr-code img {
+            width: 2.5cm;
         }
 
         .invoice-box table.lines tr th {
@@ -150,9 +156,14 @@
 
     <table class="payment">
         <tr>
-            <th colspan="2">Platební podmínky</th>
+            <th colspan="{% if qr_code is not none %}3{% else %}2{% endif %}">Platební podmínky</th>
         </tr>
         <tr>
+            {% if qr_code is not none %}
+                <td class="qr-code">
+                    <img src="data:image/png;base64,{{ qr_code }}" alt="QR code"/>
+                </td>
+            {% endif %}
             <td>
                 <table>
                     <tr>
