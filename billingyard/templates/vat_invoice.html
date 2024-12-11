@@ -44,7 +44,9 @@
         }
 
         .invoice-box table.header tr td,
-        .invoice-box table.payment tr td,
+        {% if qr_code is none %}
+            .invoice-box table.payment tr td,
+        {% endif %}
         .invoice-box table.subjects tr th {
             width: 50%;
         }
@@ -60,6 +62,10 @@
 
         .invoice-box table.payment td table td {
             padding: 0;
+        }
+
+        .invoice-box table.payment td.qr-code img {
+            width: 2.5cm;
         }
 
         .invoice-box table.lines tr th {
@@ -97,7 +103,12 @@
             text-align: right;
         }
 
-        .invoice-box table.summary-wrapper tr td:first-child {
+        .invoice-box table.summary-wrapper > tbody > tr > td {
+            padding: 0;
+        }
+
+        .invoice-box table.summary-wrapper > tbody > tr > td:first-child {
+            width: 43%;
         }
 
         .invoice-box table.summary tr th {
@@ -188,9 +199,14 @@
 
     <table class="payment">
         <tr>
-            <th colspan="2">Platební podmínky</th>
+            <th colspan="{% if qr_code is not none %}3{% else %}2{% endif %}">Platební podmínky</th>
         </tr>
         <tr>
+            {% if qr_code is not none %}
+                <td class="qr-code">
+                    <img src="data:image/png;base64,{{ qr_code }}" alt="QR code"/>
+                </td>
+            {% endif %}
             <td>
                 <table>
                     <tr>
@@ -258,7 +274,7 @@
 
     <table class="summary-wrapper">
         <tr>
-            <td colspan="3"></td>
+            <td></td>
             <td>
                 <table class="summary">
                     <tr>

@@ -1,6 +1,7 @@
 from .invoice_processors import InvoiceProcessor, BaseInvoiceProcessor, VatInvoiceProcessor
 from .models import Invoice, Subject
 from .parser import Parser
+from .qrcode_generator import QRCodeGenerator
 
 
 class BillingYard:
@@ -15,7 +16,8 @@ class BillingYard:
         return invoice
 
     def print_invoice(self, invoice: Invoice):
-        self.invoice_processor.print_invoice(invoice)
+        qr_code = QRCodeGenerator.generate_qr_code(invoice)
+        self.invoice_processor.print_invoice(invoice, qr_code)
 
     def set_invoice_processor(self):
         self.invoice_processor = InvoiceProcessor(self.user_template_path)

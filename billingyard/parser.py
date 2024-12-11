@@ -27,8 +27,9 @@ class Parser:
             invoice_json: dict = cls.load_json_file(invoice_file_path)
             issue_date: datetime = cls.get_optional_datetime('issue_date', invoice_json)
             due_date: datetime = datetime.strptime(invoice_json['due_date'], '%d. %m. %Y')
+            iban: str = invoice_json['iban'] if 'iban' in invoice_json else None
             invoice: Invoice = Invoice(invoice_json['invoice_number'], issue_date, due_date, invoice_json['currency'],
-                                       invoice_json['bank'], invoice_json['bank_account'],
+                                       invoice_json['bank'], invoice_json['bank_account'], iban,
                                        invoice_json['payment_method'], invoice_json['register_info'])
             for invoice_line in invoice_json['invoice_lines']:
                 invoice.add_invoice_line(
@@ -45,9 +46,10 @@ class Parser:
             issue_date: datetime = cls.get_optional_datetime('issue_date', invoice_json)
             supply_date: datetime = cls.get_optional_datetime('supply_date', invoice_json)
             due_date: datetime = datetime.strptime(invoice_json['due_date'], '%d. %m. %Y')
+            iban: str = invoice_json['iban'] if 'iban' in invoice_json else None
             invoice: InvoiceVat = InvoiceVat(invoice_json['invoice_number'], issue_date, due_date,
                                              invoice_json['currency'], invoice_json['bank'],
-                                             invoice_json['bank_account'],
+                                             invoice_json['bank_account'], iban,
                                              invoice_json['payment_method'], invoice_json['register_info'], supply_date)
             for invoice_line in invoice_json['invoice_lines']:
                 invoice.add_invoice_line(
